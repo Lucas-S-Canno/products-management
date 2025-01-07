@@ -1,53 +1,87 @@
 package com.productsmanagement.productsmanagement.controller;
 
+import com.productsmanagement.productsmanagement.component.RabbitMQSender;
 import com.productsmanagement.productsmanagement.dto.ProductDTO;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import java.util.List;
 
-@WebMvcTest(ProductController.class)
-public class ProductControllerTest {
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-    @Test
-    void productDTOShouldHaveCorrectValues() {
-        ProductDTO product = new ProductDTO(1L, "Laptop", "High-end gaming laptop", 1500.00, 10, "Electronics");
-        assertEquals(1L, product.getId());
-        assertEquals("Laptop", product.getName());
-        assertEquals("High-end gaming laptop", product.getDescription());
-        assertEquals(1500.00, product.getPrice());
-        assertEquals(10, product.getQuantity());
-        assertEquals("Electronics", product.getCategory());
+class ProductControllerTest {
+
+    @Mock
+    private RabbitMQSender rabbitMQSender;
+
+    @InjectMocks
+    private ProductController productController;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void productDTOShouldHandleNullValues() {
-        ProductDTO product = new ProductDTO(null, null, null, null, null, null);
-        assertNull(product.getId());
-        assertNull(product.getName());
-        assertNull(product.getDescription());
-        assertNull(product.getPrice());
-        assertNull(product.getQuantity());
-        assertNull(product.getCategory());
+    void testCreateProduct() {
+        ProductDTO productDTO = new ProductDTO();
+        productDTO.setName("Laptop");
+        productDTO.setDescription("High-end gaming laptop");
+        productDTO.setPrice(1500.00);
+        productDTO.setQuantity(10);
+        productDTO.setCategory("Electronics");
+
+        ResponseEntity<ProductDTO> response = productController.createProduct(productDTO);
+
+        assertNotNull(response.getBody());
+        assertEquals("Laptop", response.getBody().getName());
+        verify(rabbitMQSender, times(1)).sendMessage(anyString(), any(ProductDTO.class));
     }
 
     @Test
-    void productDTOShouldUpdateValues() {
-        ProductDTO product = new ProductDTO();
-        product.setId(2L);
-        product.setName("Smartphone");
-        product.setDescription("Latest model smartphone");
-        product.setPrice(800.00);
-        product.setQuantity(20);
-        product.setCategory("Electronics");
+    void testGetAllProducts() {
+        ProductDTO productDTO = new ProductDTO();
+        productDTO.setName("Laptop");
+        productController.createProduct(productDTO);
 
-        assertEquals(2L, product.getId());
-        assertEquals("Smartphone", product.getName());
-        assertEquals("Latest model smartphone", product.getDescription());
-        assertEquals(800.00, product.getPrice());
-        assertEquals(20, product.getQuantity());
-        assertEquals("Electronics", product.getCategory());
+        ResponseEntity<List<ProductDTO>> response = productController.getAllProducts();
+
+        assertNotNull(response.getBody());
+        assertFalse(response.getBody().isEmpty());
     }
 
+    @Test
+    void testUpdateProduct() {
+        ProductDTO productDTO = new ProductDTO();
+        productDTO.setName("Laptop");
+        productController.createProduct(productDTO);
+
+        ProductDTO updatedProductDTO = new ProductDTO();
+        updatedProductDTO.setName("Updated Laptop");
+        updatedProductDTO.setDescription("Updated description");
+        updatedProductDTO.setPrice(2000.00);
+        updatedProductDTO.setQuantity(5);
+        updatedProductDTO.setCategory("Updated Electronics");
+
+        ResponseEntity<ProductDTO> response = productController.updateProduct(1L, updatedProductDTO);
+
+        assertNotNull(response.getBody());
+        assertEquals("Updated Laptop", response.getBody().getName());
+    }
+
+    @Test
+    void testDeleteProduct() {
+        ProductDTO productDTO = new ProductDTO();
+        productDTO.setName("Laptop");
+        productController.createProduct(productDTO);
+
+        ResponseEntity<Void> response = productController.deleteProduct(1L);
+
+        assertEquals(204, response.getStatusCodeValue());
+    }
 }
