@@ -7,6 +7,7 @@ Esta API foi desenvolvida para gerenciar uma lista de produtos. Ela permite cria
 - Java 17
 - Gradle 7.0
 - Git
+- Docker
 
 ## Primeiros Passos
 
@@ -168,10 +169,10 @@ A aplicação será iniciada em `http://localhost:8080/api`.
 
 Agora você pode usar a coleção importada para fazer requisições à API. Aqui estão alguns exemplos de requisições:
 
-- **Create New Product**: Envia uma requisição \`POST\` para \`http://localhost:8080/api/products\` com os detalhes do produto no corpo.
-- **Get All Products**: Envia uma requisição \`GET\` para \`http://localhost:8080/api/products\` para recuperar todos os produtos.
-- **Update Product**: Envia uma requisição \`PUT\` para \`http://localhost:8080/api/products/{id}\` com os detalhes atualizados do produto no corpo.
-- **Delete Product**: Envia uma requisição \`DELETE\` para \`http://localhost:8080/api/products/{id}\` para deletar um produto específico.
+- **Create New Product**: Envia uma requisição \`POST\` para \`http://localhost:8080/api/products` com os detalhes do produto no corpo.
+- **Get All Products**: Envia uma requisição \`GET\` para \`http://localhost:8080/api/products` para recuperar todos os produtos.
+- **Update Product**: Envia uma requisição \`PUT\` para \`http://localhost:8080/api/products/{id}` com os detalhes atualizados do produto no corpo.
+- **Delete Product**: Envia uma requisição \`DELETE\` para \`http://localhost:8080/api/products/{id}` para deletar um produto específico.
 
 ## Endpoints
 
@@ -179,3 +180,42 @@ Agora você pode usar a coleção importada para fazer requisições à API. Aqu
 - `GET /api/products`: Recupera todos os produtos.
 - `PUT /api/products/{id}`: Atualiza um produto existente.
 - `DELETE /api/products/{id}`: Deleta um produto.
+
+## Testes Unitários
+
+Os teste unitários estão localizados em `src/test/java/com/lucas/canno/productsmanagement`.
+
+Para executar os testes, use o seguinte comando:
+
+```sh
+./gradlew test
+```
+
+### Github Actions
+
+Os testes são executados automaticamente no Github Actions a cada push ou pull request.
+
+A pipeline está localizada em `.github/workflows/ci.yml`.
+
+## RabbitMQ
+
+As configurações do RabbitMQ estão localizadas em `src/main/resources/application.yml`.
+
+Para iniciar o RabbitMQ, execute o seguinte comando:
+
+```sh
+docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+```
+
+Certifique-se de que o RabbitMQ está em execução.
+
+Acessar o RabbitMQ Management Console: `http://localhost:15672/`.
+
+- **Username**: guest
+- **Password**: guest
+
+### Testado a Fila
+
+Execute a aplicação e envie uma requisição `POST` para `http://localhost:8080/api/products`.
+
+Observe no console que a mensagem foi enviada para a fila e nos logs o produto enviado.
