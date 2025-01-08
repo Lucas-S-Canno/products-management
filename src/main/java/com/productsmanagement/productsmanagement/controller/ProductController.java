@@ -1,6 +1,9 @@
 package com.productsmanagement.productsmanagement.controller;
 
+import com.productsmanagement.productsmanagement.component.RabbitMQSender;
+import com.productsmanagement.productsmanagement.config.RabbitMQConfig;
 import com.productsmanagement.productsmanagement.dto.ProductDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +20,13 @@ public class ProductController {
     private final Map<Long, ProductDTO> productRepository = new HashMap<>();
     private Long productIdSequence = 1L;
 
+    private final RabbitMQSender rabbitMQSender;
+
+    @Autowired
+    public ProductController(RabbitMQSender rabbitMQSender) {
+        this.rabbitMQSender = rabbitMQSender;
+    }
+
     //Endpoint para criar um produto
     @PostMapping
     public ResponseEntity<ProductDTO> createProduct(
@@ -24,6 +34,7 @@ public class ProductController {
     ) {
         productDTO.setId(productIdSequence++);
         productRepository.put(productDTO.getId(), productDTO);
+        rabbitMQSender.sendMessage(RabbitMQConfig.QUEUE_NAME, productDTO);
         return ResponseEntity.ok(productDTO);
     }
 
