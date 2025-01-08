@@ -219,3 +219,37 @@ Acessar o RabbitMQ Management Console: `http://localhost:15672/`.
 Execute a aplicação e envie uma requisição `POST` para `http://localhost:8080/api/products`.
 
 Observe no console que a mensagem foi enviada para a fila e nos logs o produto enviado.
+
+## Dockerfile
+
+O Dockerfile está localizado na raiz do projeto.
+
+Criado para facilitar a execução da aplicação em um container Docker e fazer upload em um
+Container Registry como o Amazon ECR e rodar a api dentro de um orquestrador de containeres
+como Amazon ECS ou Amazon EKS.
+
+### Construindo a Imagem
+
+Para construir a imagem Docker, execute o seguinte comando:
+
+```sh
+docker build -t products-management .
+```
+
+### Rodando a Imagem
+
+Para rodar a imagem Docker, execute o seguinte comando:
+
+```sh
+docker run -p 8080:8080 products-management
+```
+
+#### OBS: Importante alterar o usuario e senha do RabbitMQ no arquivo `application.propperties` para a aplicação conseguir se conectar a sua instancia do RabbitMQ.
+
+## Segurança de Dados Sensiveis da Aplicação
+
+Usuário e senha do RabbitMQ são dados sensiveis e não devem ser expostos no código fonte.
+
+Portanto foi feito uma configuração para que esses dados sejam passados como variáveis de ambiente a partir do github secrets.
+
+
