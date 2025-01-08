@@ -252,4 +252,10 @@ Usuário e senha do RabbitMQ são dados sensiveis e não devem ser expostos no c
 
 Portanto foi feito uma configuração para que esses dados sejam passados como variáveis de ambiente a partir do github secrets.
 
+## Principios SOLID
+
+Para garantir que o código seja escalável e fácil de manter.
+
+Foi alterado o código do controller para que o mesmo possua o minimo possível de regras e lógicas a serem executadas, deixando isso a cargo do Service.
+
 
