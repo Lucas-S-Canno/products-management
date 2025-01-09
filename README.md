@@ -258,4 +258,12 @@ Para garantir que o código seja escalável e fácil de manter.
 
 Foi alterado o código do controller para que o mesmo possua o minimo possível de regras e lógicas a serem executadas, deixando isso a cargo do Service.
 
+## Banco de dados
 
+Para o banco de dados foi utilizado uma instancia MySQL 8.0 no Amazon RDS.
+
+### Migration (FlyWay)
+
+As migrations estão localizadas em `src/main/resources/db/migration`.
+
+Tendo duas migrations, uma de criação da tabela `V1__create_table_products.sql` e uma de inserção de dados `V2__populate_products_table.sql`.
