@@ -1,7 +1,24 @@
 FROM openjdk:17-jdk-slim
+
 WORKDIR /app
+
 COPY . .
+
+ARG RABBITMQ_USER
+ARG RABBITMQ_PASSWORD
+ARG RDS_URL
+ARG RDS_USER
+ARG RDS_PASSWORD
+
+ENV RABBITMQ_USER=$RABBITMQ_USER
+ENV RABBITMQ_PASSWORD=$RABBITMQ_PASSWORD
+ENV RDS_URL=$RDS_URL
+ENV RDS_USER=$RDS_USER
+ENV RDS_PASSWORD=$RDS_PASSWORD
+
 RUN chmod +x ./gradlew
 RUN ./gradlew clean build
+
 RUN cp build/libs/productsmanagement-0.0.1-SNAPSHOT.jar app.jar
+
 ENTRYPOINT ["java", "-jar", "app.jar"]

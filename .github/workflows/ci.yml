@@ -74,7 +74,12 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t products-management:latest .
+          docker build --build-arg RABBITMQ_USER=${{ secrets.RABBITMQ_USER }} \
+                       --build-arg RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }} \
+                       --build-arg RDS_URL=${{ secrets.RDS_URL }} \
+                       --build-arg RDS_USER=${{ secrets.RDS_USER }} \
+                       --build-arg RDS_PASSWORD=${{ secrets.RDS_PASSWORD }} \
+                       -t products-management:latest .
           docker tag products-management:latest ${{ secrets.REPO_NAME }}:latest
 
       - name: Push Docker image to Amazon ECR
