@@ -38,7 +38,7 @@ Para executar a aplicação, use o seguinte comando:
 
 A aplicação será iniciada em `http://localhost:8080/api`.
 
-E o swagger em `http://localhost:8080/api/swagger-ui`.
+E o swagger em `http://localhost:8080/api/swagger-ui.html` e para PROD 'http://44.222.190.72:8080/api/swagger-ui.html'.
 
 ## Testando a API com Postman
 
