@@ -43,4 +43,66 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: build/test-results
+          path: build/reports/tests/test
+
+  upload:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set environment variables
+        run: |
+          echo "RABBITMQ_USER=${{ secrets.RABBITMQ_USER }}" >> $GITHUB_ENV
+          echo "RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}" >> $GITHUB_ENV
+          echo "RDS_URL=${{ secrets.RDS_URL }}" >> $GITHUB_ENV
+          echo "RDS_USER=${{ secrets.RDS_USER }}" >> $GITHUB_ENV
+          echo "RDS_PASSWORD=${{ secrets.RDS_PASSWORD }}" >> $GITHUB_ENV
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build Docker image
+        run: |
+          docker build --build-arg RABBITMQ_USER=${{ secrets.RABBITMQ_USER }} \
+                       --build-arg RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }} \
+                       --build-arg RDS_URL=${{ secrets.RDS_URL }} \
+                       --build-arg RDS_USER=${{ secrets.RDS_USER }} \
+                       --build-arg RDS_PASSWORD=${{ secrets.RDS_PASSWORD }} \
+                       -t products-management:latest .
+          docker tag products-management:latest ${{ secrets.REPO_NAME }}:latest
+
+      - name: Push Docker image to Amazon ECR
+        run: |
+          docker push ${{ secrets.REPO_NAME }}:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: upload
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Deploy to Amazon ECS
+        run: |
+          aws ecs update-service --cluster ProductAPI --service productAPI --force-new-deployment
