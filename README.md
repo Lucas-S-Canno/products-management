@@ -44,126 +44,8 @@ A aplicação será iniciada em `http://localhost:8080/api`.
 
 1. Abra o Postman.
 2. Clique em `Arquivo` -> `Importar` no canto superior esquerdo ou `ctrl + O`.
-3. Copie e cole o seguinte JSON na área de texto:
+3. Copie e cole o JSON que está no final do README na área de texto:
 4. Clique em `Importar`.
-
-```json
-{
-  "info": {
-    "_postman_id": "43d926bb-d8af-448e-b6c3-26583fa2abdd",
-    "name": "Product Management API",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "13687818"
-  },
-  "item": [
-    {
-      "name": "Get All Products",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "localhost:8080/api/products",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "products"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Create New Product",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n  \"name\": \"Laptop\",\r\n  \"description\": \"High-end gaming laptop\",\r\n  \"price\": 1500.00,\r\n  \"quantity\": 10,\r\n  \"category\": \"Electronics\"\r\n}\r\n\r\n// {\r\n//   \"name\": \"Smartphone\",\r\n//   \"description\": \"Latest model smartphone\",\r\n//   \"price\": 800.00,\r\n//   \"quantity\": 25,\r\n//   \"category\": \"Electronics\"\r\n// }\r\n\r\n// {\r\n//   \"name\": \"Headphones\",\r\n//   \"description\": \"Noise-cancelling headphones\",\r\n//   \"price\": 200.00,\r\n//   \"quantity\": 50,\r\n//   \"category\": \"Accessories\"\r\n// }",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "localhost:8080/api/products",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "products"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Update Product",
-      "request": {
-        "method": "PUT",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n  \"name\": \"Laptop Gamer\",\r\n  \"description\": \"High-end gaming laptop\",\r\n  \"price\": 2500.00,\r\n  \"quantity\": 10,\r\n  \"category\": \"Electronics\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "localhost:8080/api/products/1",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "products",
-            "1"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Delete Product",
-      "request": {
-        "method": "DELETE",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n  \"name\": \"Laptop Gamer\",\r\n  \"description\": \"High-end gaming laptop\",\r\n  \"price\": 2500.00,\r\n  \"quantity\": 10,\r\n  \"category\": \"Electronics\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "localhost:8080/api/products/1",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "products",
-            "1"
-          ]
-        }
-      },
-      "response": []
-    }
-  ]
-}
-```
 
 ### Fazendo Requisições
 
@@ -173,6 +55,13 @@ Agora você pode usar a coleção importada para fazer requisições à API. Aqu
 - **Get All Products**: Envia uma requisição \`GET\` para \`http://localhost:8080/api/products` para recuperar todos os produtos.
 - **Update Product**: Envia uma requisição \`PUT\` para \`http://localhost:8080/api/products/{id}` com os detalhes atualizados do produto no corpo.
 - **Delete Product**: Envia uma requisição \`DELETE\` para \`http://localhost:8080/api/products/{id}` para deletar um produto específico.
+- **Get by Name**: Envia uma requisição \`GET\` para \`http://localhost:8080/api/products/search?name={name}` para recuperar um produto pelo nome.
+- **Get by Category**: Envia uma requisição \`GET\` para \`http://localhost:8080/api/products/search?category={category}` para recuperar um produto pela categoria.
+- **Get by Min Price**: Envia uma requisição \`GET\` para \`http://localhost:8080/api/products/search?minPrice={minPrice}` para recuperar um produto pelo preço mínimo.
+- **Get by Max Price**: Envia uma requisição \`GET\` para \`http://localhost:8080/api/products/search?maxPrice={maxPrice}` para recuperar um produto pelo preço máximo.
+
+#### OBS: o endpoint "Get By" funciona com junções de filtros como: name e category, category com min e max price, min e max price, etc
+
 
 ## Endpoints
 
@@ -267,3 +156,418 @@ Para o banco de dados foi utilizado uma instancia MySQL 8.0 no Amazon RDS.
 As migrations estão localizadas em `src/main/resources/db/migration`.
 
 Tendo duas migrations, uma de criação da tabela `V1__create_table_products.sql` e uma de inserção de dados `V2__populate_products_table.sql`.
+
+```json
+{
+  "info": {
+    "_postman_id": "43d926bb-d8af-448e-b6c3-26583fa2abdd",
+    "name": "Product Management API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "13687818"
+  },
+  "item": [
+    {
+      "name": "Local",
+      "item": [
+        {
+          "name": "get by filter",
+          "item": [
+            {
+              "name": "Get by Name",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/api/products/search?name=Produto 1",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "products",
+                    "search"
+                  ],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "Produto 1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get by Category",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/api/products/search?category=Categoria 2",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "products",
+                    "search"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "Categoria 2"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get by Min Price",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/api/products/search?minPrice=30.99",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "products",
+                    "search"
+                  ],
+                  "query": [
+                    {
+                      "key": "minPrice",
+                      "value": "30.99"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get by Max Price",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/api/products/search?maxPrice=40.99",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "products",
+                    "search"
+                  ],
+                  "query": [
+                    {
+                      "key": "maxPrice",
+                      "value": "40.99"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get by Min and Max Price",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/api/products/search?minPrice=30.99&maxPrice=40.99",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "products",
+                    "search"
+                  ],
+                  "query": [
+                    {
+                      "key": "minPrice",
+                      "value": "30.99"
+                    },
+                    {
+                      "key": "maxPrice",
+                      "value": "40.99"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get by Name and Category",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/api/products/search?name=Produto 3&category=Categoria 3",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "products",
+                    "search"
+                  ],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "Produto 3"
+                    },
+                    {
+                      "key": "category",
+                      "value": "Categoria 3"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get by Name and Min Price",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/api/products/search?name=Produto 4&minPrice=40.99",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "products",
+                    "search"
+                  ],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "Produto 4"
+                    },
+                    {
+                      "key": "minPrice",
+                      "value": "40.99"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get by Category and Max Price",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/api/products/search?category=Categoria 5&maxPrice=50.99",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "products",
+                    "search"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "Categoria 5"
+                    },
+                    {
+                      "key": "maxPrice",
+                      "value": "50.99"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get by Name, Category and Min Price",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/api/products/search?name=Produto 1&category=Categoria 1&minPrice=10.99",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "products",
+                    "search"
+                  ],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "Produto 1"
+                    },
+                    {
+                      "key": "category",
+                      "value": "Categoria 1"
+                    },
+                    {
+                      "key": "minPrice",
+                      "value": "10.99"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get by Name, Category, Min and Max Price",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/api/products/search?name=Produto 2&category=Categoria 2&minPrice=20.99&maxPrice=20.99",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "products",
+                    "search"
+                  ],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "Produto 2"
+                    },
+                    {
+                      "key": "category",
+                      "value": "Categoria 2"
+                    },
+                    {
+                      "key": "minPrice",
+                      "value": "20.99"
+                    },
+                    {
+                      "key": "maxPrice",
+                      "value": "20.99"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/api/products",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create New Product",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Laptop\",\r\n  \"description\": \"High-end gaming laptop\",\r\n  \"price\": 1500.00,\r\n  \"quantity\": 10,\r\n  \"category\": \"Electronics\"\r\n}\r\n\r\n// {\r\n//   \"name\": \"Smartphone\",\r\n//   \"description\": \"Latest model smartphone\",\r\n//   \"price\": 800.00,\r\n//   \"quantity\": 25,\r\n//   \"category\": \"Electronics\"\r\n// }\r\n\r\n// {\r\n//   \"name\": \"Headphones\",\r\n//   \"description\": \"Noise-cancelling headphones\",\r\n//   \"price\": 200.00,\r\n//   \"quantity\": 50,\r\n//   \"category\": \"Accessories\"\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/api/products",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Laptop Gamer\",\r\n  \"description\": \"High-end gaming laptop\",\r\n  \"price\": 2500.00,\r\n  \"quantity\": 10,\r\n  \"category\": \"Electronics\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/api/products/1",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "products",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/api/products/2",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "products",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
+```
