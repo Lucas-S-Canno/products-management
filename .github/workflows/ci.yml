@@ -29,6 +29,9 @@ jobs:
         run: |
           echo "RABBITMQ_USER=${{ secrets.RABBITMQ_USER }}" >> $GITHUB_ENV
           echo "RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}" >> $GITHUB_ENV
+          echo "RDS_URL=${{ secrets.RDS_URL }}" >> $GITHUB_ENV
+          echo "RDS_USER=${{ secrets.RDS_USER }}" >> $GITHUB_ENV
+          echo "RDS_PASSWORD=${{ secrets.RDS_PASSWORD }}" >> $GITHUB_ENV
 
       - name: Build with Gradle
         run: ./gradlew build
