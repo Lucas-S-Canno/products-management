@@ -38,6 +38,8 @@ Para executar a aplicação, use o seguinte comando:
 
 A aplicação será iniciada em `http://localhost:8080/api`.
 
+E o swagger em `http://localhost:8080/api/swagger-ui`.
+
 ## Testando a API com Postman
 
 ### Importando a Coleção do Postman
